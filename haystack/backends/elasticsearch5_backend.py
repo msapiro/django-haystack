@@ -28,6 +28,15 @@ except ImportError:
                             installation of 'elasticsearch>=5.0.0,<6.0.0'. \
                             Please refer to the documentation."
     )
+# We need to override some elasticsearch_backend settings as string type is
+# gone in elasticsearch 5.
+from haystack.backends import elasticsearch_backend
+elasticsearch_backend.DEFAULT_FIELD_MAPPING = {
+    "type": "text", "analyzer": "snowball"}
+elasticsearch_backend.FIELD_MAPPINGS["edge_ngram"] = {
+    "type": "text", "analyzer": "edgengram_analyzer"}
+elasticsearch_backend.FIELD_MAPPINGS["ngram"] = {
+    "type": "text", "analyzer": "ngram_analyzer"}
 
 
 class Elasticsearch5SearchBackend(ElasticsearchSearchBackend):
